@@ -16,14 +16,14 @@ library(readr)
 
 rm(list=ls())
 
-setwd("~/Testing")
+setwd("~/git_data/332/DATA332Final/Data")
 
 options(scipen = 999)
 column_classes <- c("numeric", "numeric", "numeric", "character", "character")
 
 census <- read.csv('nyc_census_tracts.csv')
 censusBlock <- read.csv('census_block_loc.csv', stringsAsFactors = FALSE, colClasses = column_classes)
-shootingData <- read.csv('NYPD_Shooting_Incident_Data__Historic_.csv')
+shootingData <- read.csv('NYPD_Shooting_Data.csv')
 
 censusBlock$BlockCode <- as.character(censusBlock$BlockCode)
 censusBlock$BlockCode <- substr(censusBlock$BlockCode, 1, nchar(censusBlock$BlockCode) - 4)
