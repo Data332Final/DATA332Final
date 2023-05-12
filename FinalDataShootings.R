@@ -30,11 +30,25 @@ censusBlock$BlockCode <- substr(censusBlock$BlockCode, 1, nchar(censusBlock$Bloc
 names(censusBlock)[names(censusBlock) == "BlockCode"] <- "CensusTract"
 shootingData <- shootingData[complete.cases(shootingData), ]
 
+censusBlock$Latitude <- as.character(censusBlock$Latitude)
+censusBlock$Latitude <- substr(censusBlock$Latitude, 1, 7)
+censusBlock$Longitude <- as.character(censusBlock$Longitude)
+censusBlock$Longitude <- substr(censusBlock$Longitude, 1, 7)
+
+shootingData$Latitude <- as.character(shootingData$Latitude)
+shootingData$Latitude <- substr(shootingData$Latitude, 1, 8)
+shootingData$Longitude <- as.character(shootingData$Longitude)
+shootingData$Longitude <- substr(shootingData$Longitude, 1, 8)
+
 
 censusBlock <- subset(censusBlock, State == "NY")
 mergedData <- merge(census, censusBlock, by = "CensusTract", all.x = TRUE)
 mergedData <- mergedData[complete.cases(mergedData), ]
-mergedData <- merge(shootingData, mergedData, by = c("Longitude"), all.x = TRUE)
+finalData <- merge(shootingData, mergedData, by = c("Longitude", "Latitude"), all.x = TRUE)
+finalData <- finalData[complete.cases(finalData), ]
+finalData <- finalData[!duplicated(finalData$INCIDENT_KEY), ]
+
+
 
 
 
