@@ -31,14 +31,14 @@ names(censusBlock)[names(censusBlock) == "BlockCode"] <- "CensusTract"
 shootingData <- shootingData[complete.cases(shootingData), ]
 
 censusBlock$Latitude <- as.character(censusBlock$Latitude)
-censusBlock$Latitude <- substr(censusBlock$Latitude, 1, 7)
+censusBlock$Latitude <- substr(censusBlock$Latitude, 1, 5)
 censusBlock$Longitude <- as.character(censusBlock$Longitude)
-censusBlock$Longitude <- substr(censusBlock$Longitude, 1, 7)
+censusBlock$Longitude <- substr(censusBlock$Longitude, 1, 6)
 
 shootingData$Latitude <- as.character(shootingData$Latitude)
-shootingData$Latitude <- substr(shootingData$Latitude, 1, 8)
+shootingData$Latitude <- substr(shootingData$Latitude, 1, 5)
 shootingData$Longitude <- as.character(shootingData$Longitude)
-shootingData$Longitude <- substr(shootingData$Longitude, 1, 8)
+shootingData$Longitude <- substr(shootingData$Longitude, 1, 6)
 
 
 censusBlock <- subset(censusBlock, State == "NY")
