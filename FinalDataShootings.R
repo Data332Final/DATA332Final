@@ -48,6 +48,10 @@ finalData <- merge(shootingData, mergedData, by = c("Longitude", "Latitude"), al
 finalData <- finalData[complete.cases(finalData), ]
 finalData <- finalData[!duplicated(finalData$INCIDENT_KEY), ]
 
+finalShootingData <- finalData %>%
+  select(OCCUR_DATE, VIC_AGE_GROUP, VIC_RACE, VIC_SEX, Lon_Lat, CensusTract, Borough, TotalPop, 
+         Men, Women, Hispanic, White, Black, Native, Asian, Income, Poverty, Professional, Construction,
+         Transit, Unemployment)
 
 
 
