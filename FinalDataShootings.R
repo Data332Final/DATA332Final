@@ -53,7 +53,18 @@ finalShootingData <- finalData %>%
          Men, Women, Hispanic, White, Black, Native, Asian, Income, Poverty, Professional, Construction,
          Transit, Unemployment)
 
+# the count of shooting incidents for each VIC_RACE category within each Borough
 
+pivot_table <- finalShootingData %>%
+  group_by(Borough, VIC_RACE) %>%
+  summarise(count = n()) 
+#pivot_wider(names_from = Borough, values_from = count, values_fill = 0)
+
+ggplot(pivot_table, aes(x = Borough, y = count, fill = VIC_RACE)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Borough", y = "Count", fill = "VIC_RACE") +
+  ggtitle("Count of Shooting Incidents by Borough and VIC_RACE") +
+  theme_minimal()
 
 
 
