@@ -72,6 +72,6 @@ pivot_table2 <- finalShootingData %>%
 ggplot(pivot_table2, aes(x = Borough, y = count, fill = VIC_AGE_GROUP)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(x = "Borough", y = "Count", fill = "VIC_AGE_GROUP") +
-  ggtitle("Shooting Incidents by Borough, Income, and VIC_AGE_GROUP") +
+  ggtitle("Shooting Incidents by Borough, Income, and Age") +
   theme_minimal()
 
