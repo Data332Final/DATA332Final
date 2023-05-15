@@ -22,7 +22,7 @@ str(nyc_census_tracts)
 str(nypd_shooting_data)
 
 
-
+"Explore race proportion of shooting victims by borough"
 
 library(ggplot2)
 
@@ -34,4 +34,20 @@ ggplot(filtered_data, aes(x = BORO, fill = VIC_RACE)) +
   geom_bar(position = "fill") +
   labs(x = "Borough", y = "Proportion", fill = "Race") +
   ggtitle("Race Proportion of Shooting Victims by Borough")
+  
+  
+  
+  "Make bar chart for income and potentially other variables by borough"
+library(ggplot2)
+
+# Filter the data to exclude missing or unknown income values
+filtered_data <- nyc_census_tracts[!is.na(nyc_census_tracts$Income), ]
+
+# Create a bar chart for income by borough
+ggplot(filtered_data, aes(x = Borough, y = Income)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "blue") +
+  labs(x = "Borough", y = "Income", title = "Average Income by Borough")
+  
+  
+  
 
