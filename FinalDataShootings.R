@@ -27,29 +27,30 @@ rm(list=ls())
 options(scipen = 999)
 column_classes <- c("numeric", "numeric", "numeric", "character", "character")
 
-#read in all of the seperate csv files into data frames
+# read in all of the separate csv files into data frames
 census <- read.csv('nyc_census_tracts.csv')
 censusBlock <- read.csv('census_block_loc.csv', stringsAsFactors = FALSE, colClasses = column_classes)
 shootingData <- read.csv('NYPD_Shooting_Data.csv')
 
-#cleaned the data to make the merge possible
+# cleaned the data to make merge possible
 censusBlock$BlockCode <- as.character(censusBlock$BlockCode)
 censusBlock$BlockCode <- substr(censusBlock$BlockCode, 1, nchar(censusBlock$BlockCode) - 4)
 names(censusBlock)[names(censusBlock) == "BlockCode"] <- "CensusTract"
 shootingData <- shootingData[complete.cases(shootingData), ]
 
-#made the latitudes and longitudes the same length so the merge can happen
+# made the latitudes and longitudes the same length so the merge can happen
 censusBlock$Latitude <- as.character(censusBlock$Latitude)
 censusBlock$Latitude <- substr(censusBlock$Latitude, 1, 5)
 censusBlock$Longitude <- as.character(censusBlock$Longitude)
 censusBlock$Longitude <- substr(censusBlock$Longitude, 1, 6)
 
+# same as above for separate data frame
 shootingData$Latitude <- as.character(shootingData$Latitude)
 shootingData$Latitude <- substr(shootingData$Latitude, 1, 5)
 shootingData$Longitude <- as.character(shootingData$Longitude)
 shootingData$Longitude <- substr(shootingData$Longitude, 1, 6)
 
-#merged the data, removed NAs and took out duplicated recordings of shootings
+# merged the data, removed NAs and took out duplicated records of shootings
 censusBlock <- subset(censusBlock, State == "NY")
 mergedData <- merge(census, censusBlock, by = "CensusTract", all.x = TRUE)
 mergedData <- mergedData[complete.cases(mergedData), ]
@@ -57,7 +58,7 @@ finalData <- merge(shootingData, mergedData, by = c("Longitude", "Latitude"), al
 finalData <- finalData[complete.cases(finalData), ]
 finalData <- finalData[!duplicated(finalData$INCIDENT_KEY), ]
 
-#selected the columns needed for our analysis
+# slected the columns needed for our analysis
 finalShootingData <- finalData %>%
   select(OCCUR_DATE, VIC_AGE_GROUP, VIC_RACE, VIC_SEX, Lon_Lat, CensusTract, Borough, TotalPop, 
          Men, Women, Hispanic, White, Black, Native, Asian, Income, Poverty, Professional, Construction,
@@ -114,7 +115,7 @@ month_of_shooting <- shooting_date %>%
   group_by(Borough, month) %>%
   summarise(count = n())
 
-write.csv(month_of_shooting, "montyh_of_shooting.csv", row.names = FALSE)
+write.csv(month_of_shooting, "month_of_shooting.csv", row.names = FALSE)
 
 ggplot(month_of_shooting, aes(x = month, y = count, group = Borough)) +
   geom_line(aes(colour = Borough), lwd=1.0) + 
@@ -126,16 +127,18 @@ ggplot(month_of_shooting, aes(x = month, y = count, group = Borough)) +
 finalShootingData$longitude <- as.numeric(str_extract(finalShootingData$Lon_Lat, "-?\\d+\\.\\d+"))
 finalShootingData$latitude <- as.numeric(sub(".*\\s(-?\\d+\\.\\d+).*", "\\1", finalShootingData$Lon_Lat))
 
-pivot_table5 <- finalShootingData %>%
+shooting_coordinates <- finalShootingData %>%
   group_by(longitude, latitude) %>%
   summarise(Shootings = n()) %>%
   filter(Shootings > 9)
 
-leaflet(pivot_table5) %>%
-  addTiles() %>%
-  addAwesomeMarkers(data = pivot_table5, lng = ~longitude, lat = ~latitude, label = ~Shootings, icon = awesomeIcons(icon = "star", markerColor = "darkblue")) 
+write.csv(shooting_coordinates, "shooting_coordinates.csv", row.names = FALSE)
 
-pivot_table6 <- finalShootingData %>%
+leaflet(shooting_coordinates) %>%
+  addTiles() %>%
+  addAwesomeMarkers(data = shooting_coordinates, lng = ~longitude, lat = ~latitude, label = ~Shootings, icon = awesomeIcons(icon = "star", markerColor = "darkblue")) 
+
+poverty_and_shootings <- finalShootingData %>%
   group_by(Borough, Poverty) %>%
   summarise(Count = n()) %>%
   mutate(Absolute_poverty = Count * Poverty) %>%
@@ -144,15 +147,17 @@ pivot_table6 <- finalShootingData %>%
   mutate(Total_shootings = sum(Count)) %>%
   distinct(Avg_poverty, Total_shootings)
 
-ggplot(pivot_table6, aes(x = reorder(Borough, Total_shootings), y = Total_shootings, fill = Avg_poverty)) +
+write.csv(poverty_and_shootings, "poverty_and_shootings.csv", row.names = FALSE)
+
+ggplot(poverty_and_shootings, aes(x = reorder(Borough, Total_shootings), y = Total_shootings, fill = Avg_poverty)) +
   geom_col() +
   labs(x = "Borough", y = "# of Shooting Incidents", fill = "Average Poverty %") +
   scale_fill_gradient(low="cyan", high="black") +
   ggtitle("Effect of Poverty on Number of Shootings in Each Borough") +
   theme_minimal()
 
-# created in order to bind to pivot_table8
-pivot_table7 <- finalShootingData %>%
+# created in order to bind to income_and_shootings
+unemployment_and_shootings <- finalShootingData %>%
   group_by(Borough, Unemployment) %>%
   summarise(Count = n()) %>%
   mutate(Absolute_unemployment = Count * Unemployment) %>%
@@ -160,7 +165,9 @@ pivot_table7 <- finalShootingData %>%
   mutate(Avg_unemployment = Total_unemployment/sum(Count)) %>%
   distinct(Avg_unemployment)
 
-pivot_table8 <- finalShootingData %>%
+write.csv(unemployment_and_shootings, "unemployment_and_shootings.csv", row.names = FALSE)
+
+income_and_shootings <- finalShootingData %>%
   group_by(Borough, Income) %>%
   summarise(Count = n()) %>%
   mutate(Absolute_income = Count * Income) %>%
@@ -168,10 +175,12 @@ pivot_table8 <- finalShootingData %>%
   mutate(Avg_income = round(Total_income/sum(Count)), 0) %>%
   mutate(Total_shootings = sum(Count)) %>%
   distinct(Avg_income, Total_shootings) %>%
-  cbind(pivot_table7$Avg_unemployment) %>%
+  cbind(unemployment_and_shootings$Avg_unemployment) %>%
   dplyr::rename("Avg_unemployment" = "...4")
 
-ggplot(pivot_table8, aes(x = reorder(Borough, -Avg_unemployment), y = Total_shootings, size = Avg_unemployment, color = Avg_income)) +
+write.csv(income_and_shootings, "income_and_shootings.csv", row.names = FALSE)
+
+ggplot(income_and_shootings, aes(x = reorder(Borough, -Avg_unemployment), y = Total_shootings, size = Avg_unemployment, color = Avg_income)) +
   geom_point() +
   geom_text(aes(label = paste0("$",Avg_income), vjust = 1.5)) + 
   scale_size(range = c(5,10)) +
@@ -180,7 +189,7 @@ ggplot(pivot_table8, aes(x = reorder(Borough, -Avg_unemployment), y = Total_shoo
 
 
 
-  
+
 
 
   
