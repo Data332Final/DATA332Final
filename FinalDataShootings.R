@@ -73,7 +73,8 @@ ggplot(pivot_table, aes(x = Borough, y = count, fill = VIC_RACE)) +
 #Shooting incidents for different VIC_AGE_GROUP categories within each combination of Borough and Income.
 pivot_table2 <- finalShootingData %>%
   group_by(Borough, Income, VIC_AGE_GROUP) %>%
-  summarise(count = n()) 
+  summarise(count = n()) %>%
+  filter(VIC_AGE_GROUP != "1022")
 
 ggplot(pivot_table2, aes(x = Borough, y = Income, fill = VIC_AGE_GROUP)) +
   geom_bar(stat = "identity", position = "dodge") +
@@ -93,21 +94,25 @@ shooting_date$month <- factor(month.name[shooting_date$month_num], levels = mont
 # converting year values to four digit format
 shooting_date$year <- ifelse(nchar(shooting_date$year_num) == 2, paste0("20",shooting_date$year_num), paste0("200",shooting_date$year_num))
 
-pivot_table3 <- shooting_date %>%
+year_of_shooting <- shooting_date %>%
   group_by(Borough, year) %>%
   summarise(count = n())
 
-ggplot(pivot_table3, aes(x = year, y = count, group = Borough)) +
+write.csv(year_of_shooting, "year_of_shooting.csv", row.names = FALSE)
+
+ggplot(year_of_shooting, aes(x = year, y = count, group = Borough)) +
   geom_line(aes(colour = Borough), lwd=1.0) + 
   xlab("Year") + 
   ylab("# of Shooting Incidents") + 
   ggtitle("# of Shooting Incidents Each Year by Borough")
   
-pivot_table4 <- shooting_date %>%
+month_of_shooting <- shooting_date %>%
   group_by(Borough, month) %>%
   summarise(count = n())
 
-ggplot(pivot_table4, aes(x = month, y = count, group = Borough)) +
+write.csv(month_of_shooting, "montyh_of_shooting.csv", row.names = FALSE)
+
+ggplot(month_of_shooting, aes(x = month, y = count, group = Borough)) +
   geom_line(aes(colour = Borough), lwd=1.0) + 
   xlab("Month") + 
   ylab("# of Shooting Incidents") + 
