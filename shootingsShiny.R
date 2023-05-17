@@ -11,18 +11,18 @@ library(tidyverse)
 
 rm(list = ls())
 
-setwd(C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/pivotTables)
+setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/pivotTables")
 
 # change names when pivot tables are made
 # add or remove according to needs
-vis1 <- read.csv("  .csv")
-vis2 <- read.csv("  .csv")
-vis3 <- read.csv("  .csv")
-vis4 <- read.csv("  .csv")
-vis5 <- read.csv("  .csv")
-vis6 <- read.csv("  .csv")
-vis7 <- read.csv("  .csv")
-vis8 <- read.csv("  .csv")
+#vis1 <- read.csv("  .csv")
+#vis2 <- read.csv("  .csv")
+year_of_shooting <- read.csv("year_of_shooting.csv")
+month_of_shooting <- read.csv("month_of_shooting.csv")
+shooting_coordinates <- read.csv("shooting_coordinates.csv")
+poverty_and_shootings <- read.csv("poverty_and_shootings.csv")
+unemployment_and_shootings <- read.csv("unemployment_and_shootings.csv")
+income_and_shootings <- read.csv("income_and_shootings.csv")
 
 
 #setting up ui
@@ -35,79 +35,79 @@ ui<-fluidPage(
   tabsetPanel(
     
     # First tab content
-    tabPanel("vis1",
-             div(style = "text-align: center;",
-                 h1("vis1 title"),
-                 p("Chart explanation"),
-                 plotOutput('plot_01', height = "675px"),
-                 # creating a pivot table object
-                 column(2, tableOutput("vis_1_pivot"))
-             )
-    ),
+    # tabPanel("vis1",
+    #          div(style = "text-align: center;",
+    #              h1("vis1 title"),
+    #              p("Chart explanation"),
+    #              plotOutput('plot_01', height = "675px"),
+    #              # creating a pivot table object
+    #              column(2, tableOutput("vis_1_pivot"))
+    #          )
+    # ),
     
     # Second tab content
-    tabPanel("vis2",
-             div(style = "text-align: center;",
-                 h1("vis2 title"),
-                 p("Chart explanation"),
-                 plotOutput('plot_02', height = "675px"),
-                 # creating a pivot table object
-                 column(2, tableOutput("vis_2_pivot"))
-             )
-    ),
+    # tabPanel("vis2",
+    #          div(style = "text-align: center;",
+    #              h1("vis2 title"),
+    #              p("Chart explanation"),
+    #              plotOutput('plot_02', height = "675px"),
+    #              # creating a pivot table object
+    #              column(2, tableOutput("vis_2_pivot"))
+    #          )
+    # ),
     
     # Third tab content
-    tabPanel("vis3",
+    tabPanel("Shootings by Year and Borough",
              div(style = "text-align: center;",
-                 h1("vis3 title"),
+                 h1("Shootings by Year and Borough"),
                  p("Chart explanation"),
                  plotOutput('plot_03', height = "675px"),
                  # creating a pivot table object
-                 column(2, tableOutput("vis_3_pivot"))
+                 column(2, tableOutput("year_of_shooting_pivot"))
              )
     ),
     
     # Fourth tab content
-    tabPanel("vis4",
+    tabPanel("Shootings by Month and Borough",
              div(style = "text-align: center;",
-                 h1("vis4 title"),
+                 h1("Shootings by Month and Borough"),
                  p("Chart explanation"),
                  plotOutput('plot_04', height = "675px"),
                  # creating a pivot table object
-                 column(2, tableOutput("vis_4_pivot"))
+                 column(2, tableOutput("month_of_shooting_pivot"))
              )
     ),
     
     # Fifth tab content
-    tabPanel("vis5",
+    tabPanel("Geospatial Shooting Incident Map",
              div(style = "text-align: center;",
-                 h1("vis5 title"),
+                 h1("Locations of Shootings"),
                  p("Chart explanation"),
-                 plotOutput('plot_05', height = "675px"),
+                 leafletOutput('plot_05', height = "675px"),
                  # creating a pivot table object
-                 column(2, tableOutput("vis_5_pivot"))
+                 column(2, tableOutput("shooting_coordinates_pivot"))
              )
     ),
     
     # Sixth tab content
-    tabPanel("vis6",
+    tabPanel("Effect of Poverty on Shootings by Borough",
              div(style = "text-align: center;",
-                 h1("vis6 title"),
-                 p("Chart explanation"),
+                 h1("Effect of Poverty on Shootings by Borough"),
+                 p("Effect of Poverty on Shootings by Borough"),
                  plotOutput('plot_06', height = "675px"),
                  # creating a pivot table object
-                 column(2, tableOutput("vis_6_pivot"))
+                 column(2, tableOutput("poverty_and_shootings_pivot"))
              )
     ),
     
     # Seventh tab content
-    tabPanel("vis7",
+    tabPanel("Effects of Income and Unemployment Rates on Shootings",
              div(style = "text-align: center;",
-                 h1("vis7 title"),
+                 h1("Effects of Income and Unemployment Rates on Shootings"),
                  p("Chart explanation"),
                  plotOutput('plot_07', height = "675px"),
                  # creating a pivot table object
-                 column(2, tableOutput("vis_7_pivot"))
+                 column(2, tableOutput("income_and_shootings_pivot"))
              )
     ),
     
@@ -123,13 +123,13 @@ ui<-fluidPage(
     ),
     
     # Ninth tab content
-    tabPanel("Leaflet map",
-             div(style = "text-align: center;",
-                 h1("map title"),
-                 p("chart explanation"),
-                 leafletOutput('map', height = "675px")
-             )
-    ),
+    # tabPanel("Leaflet map",
+    #          div(style = "text-align: center;",
+    #              h1("map title"),
+    #              p("chart explanation"),
+    #              leafletOutput('map', height = "675px")
+    #          )
+    # ),
     
   )
 )
@@ -137,76 +137,93 @@ ui<-fluidPage(
 
 server<-function(input,output){
   
-  # displaying pivot table
-  vis_1_pivot <- renderTable({
-    vis1_dataframe})
+  # # displaying pivot table
+  # vis_1_pivot <- renderTable({
+  #   vis1_dataframe})
+  # 
+  # # displaying pivot table
+  # vis_2_pivot <- renderTable({
+  #   vis2_dataframe})
+  # 
+  # # displaying pivot table
+  # year_of_shooting_pivot <- renderTable({
+  #   year_of_shooting})
+  # 
+  # # displaying pivot table
+  # month_of_shooting_pivot <- renderTable({
+  #   month_of_shooting})
+  # 
+  # # displaying pivot table
+  # shooting_coordinates_pivot <- renderTable({
+  #   shooting_coordinates})
+  # 
+  # # displaying pivot table
+  # poverty_and_shootings_pivot <- renderTable({
+  #   poverty_and_shootings})
+  # 
+  # # displaying pivot table
+  # income_and_shootings_pivot <- renderTable({
+  #   income_and_shootings})
+  # 
+  # # displaying pivot table
+  # vis8_pivot <- renderTable({
+  #   vis8_dataframe})
   
-  # displaying pivot table
-  vis_2_pivot <- renderTable({
-    vis2_dataframe})
+  #vis1 <-
+    #chart code
   
-  # displaying pivot table
-  vis3_pivot <- renderTable({
-    vis3_dataframe})
+  #vis2 <-
+    #chart code
   
-  # displaying pivot table
-  vis4_pivot <- renderTable({
-    vis4_dataframe})
+  year_of_shooting <-
+    ggplot(year_of_shooting, aes(x = year, y = count, group = Borough)) +
+    geom_line(aes(colour = Borough), lwd=1.0) + 
+    xlab("Year") + 
+    ylab("# of Shooting Incidents") + 
+    ggtitle("# of Shooting Incidents Each Year by Borough")
   
-  # displaying pivot table
-  vis5_pivot <- renderTable({
-    vis5_dataframe})
+  month_of_shooting <-
+    ggplot(month_of_shooting, aes(x = month, y = count, group = Borough)) +
+    geom_line(aes(colour = Borough), lwd=1.0) + 
+    xlab("Month") + 
+    ylab("# of Shooting Incidents") + 
+    ggtitle("Cumulative # of Shooting Incidents Each Month by Borough") 
   
-  # displaying pivot table
-  vis6_pivot <- renderTable({
-    vis6_dataframe})
+  shooting_coordinates <-
+    leaflet(shooting_coordinates) %>%
+    addTiles() %>%
+    addAwesomeMarkers(data = shooting_coordinates, lng = ~longitude, lat = ~latitude, label = ~Shootings, icon = awesomeIcons(icon = "star", markerColor = "darkblue")) 
   
-  # displaying pivot table
-  vis7_pivot <- renderTable({
-    vis7_dataframe})
+  poverty_and_shootings <-
+    ggplot(poverty_and_shootings, aes(x = reorder(Borough, Total_shootings), y = Total_shootings, fill = Avg_poverty)) +
+    geom_col() +
+    labs(x = "Borough", y = "# of Shooting Incidents", fill = "Average Poverty %") +
+    scale_fill_gradient(low="cyan", high="black") +
+    ggtitle("Effect of Poverty on Number of Shootings in Each Borough") +
+    theme_minimal()
   
-  # displaying pivot table
-  vis8_pivot <- renderTable({
-    vis8_dataframe})
+   income_and_shootings<-
+    ggplot(income_and_shootings, aes(x = reorder(Borough, -Avg_unemployment), y = Total_shootings, size = Avg_unemployment, color = Avg_income)) +
+    geom_point() +
+    geom_text(aes(label = paste0("$",Avg_income), vjust = 1.5)) + 
+    scale_size(range = c(5,10)) +
+    scale_color_gradient(low="#FFC330", high="steelblue") +
+    labs(x = "Borough", y = "# of Shooting Incidents", size = "Average Unemployment", color = "Average Income")
   
-  vis1 <-
-    chart code
-  
-  vis2 <-
-    chart code
-  
-  vis3 <-
-    chart code
-  
-  vis4 <-
-    chart code
-  
-  vis5 <-
-    chart code
-  
-  vis6 <-
-    chart code
-  
-  vis7 <-
-    chart code
-  
-  vis8 <-
-    chart code
+  #vis8 <-
+    #chart code
 
-  leaflet_map <-
-    leaflet() %>% 
-    addTiles() %>% 
-    addMarkers(lng = , lat = , label = )
+  
   
   
   # displaying chart visualizations
   output$plot_01 = renderPlot({vis1})
   output$plot_02 = renderPlot({vis2})
-  output$plot_03 = renderPlot({vis3})
-  output$plot_04 = renderPlot({vis4})
-  output$plot_05 = renderPlot({vis5})
-  output$plot_06 = renderPlot({vis6})
-  output$plot_07 = renderPlot({vis7})
+  output$plot_03 = renderPlot({year_of_shooting})
+  output$plot_04 = renderPlot({month_of_shooting})
+  output$plot_05 = renderLeaflet({shooting_coordinates})
+  output$plot_06 = renderPlot({poverty_and_shootings})
+  output$plot_07 = renderPlot({income_and_shootings})
   output$plot_08 = renderPlot({vis8})
   output$map = renderLeaflet({leaflet_map})
   
