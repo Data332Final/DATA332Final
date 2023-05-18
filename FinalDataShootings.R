@@ -229,6 +229,29 @@ ggplot(victim_women_pivot, aes(x = Borough, y = totalShootings, fill = popRatio/
   geom_bar(stat = "identity") +
   labs(x = "Borough", y = "Total Number of Shootings", fill = "Population Ratio/Victim Ratio")
   
+population_race_pivot <- finalShootingData%>%
+  group_by(Borough)%>%
+  summarise(Count = n())
+
+average_black_percent <- finalShootingData%>%
+  group_by(Borough, Black)%>%
+  summarise(Count = n())%>%
+  mutate(absoluteCount = Count*Black)%>%
+  mutate(totalBlack = sum(absoluteCount))%>%
+  mutate(averageBlack = totalBlack/sum(Count))%>%
+  distinct(averageBlack)
+  
+victim_race_pivot <- finalShootingData %>%
+  group_by(Borough, VIC_RACE)%>%
+  summarise(Count = n())%>%
+  filter(VIC_RACE == "BLACK")%>%
+  cbind(population_race_pivot$Count)%>%
+  dplyr::rename("totalShootings" = "...4")%>%
+  mutate(blackPercent = (Count / totalShootings)*100)%>%
+  cbind(average_black_percent$averageBlack)%>%
+  dplyr::rename("populationAverageBlack" = "...6")
+  
+  
 
   
   
