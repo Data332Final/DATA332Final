@@ -187,7 +187,49 @@ ggplot(income_and_shootings, aes(x = reorder(Borough, -Avg_unemployment), y = To
   scale_color_gradient(low="#FFC330", high="steelblue") +
   labs(x = "Borough", y = "# of Shooting Incidents", size = "Average Unemployment", color = "Average Income")
 
+men_pivot <- finalShootingData %>%
+  group_by(Borough, Men)%>%
+  summarise(Count = n())%>%
+  mutate(absoluteCount = Count*Men)%>%
+  mutate(totalMen = sum(absoluteCount))%>%
+  mutate(averageMen = totalMen/sum(Count))%>%
+  distinct(averageMen)
 
+women_pivot <- finalShootingData %>%
+  group_by(Borough, Women)%>%
+  summarise(Count = n())%>%
+  mutate(absoluteCount = Count*Women)%>%
+  mutate(totalWomen = sum(absoluteCount))%>%
+  mutate(averageWomen = totalWomen/sum(Count))%>%
+  distinct(averageWomen)%>%
+  cbind(men_pivot$averageMen)%>%
+  dplyr::rename("averageMen" = "...3")%>%
+  mutate(popRatio = averageMen / averageWomen)
+
+victim_men_pivot <- finalShootingData %>%
+  group_by(Borough, VIC_SEX)%>%
+  summarise(Count = n())%>%
+  filter(VIC_SEX == 'M')
+
+victim_women_pivot <- finalShootingData %>%
+  group_by(Borough, VIC_SEX)%>%
+  summarise(Count = n())%>%
+  filter(VIC_SEX == 'F')%>%
+  cbind(victim_men_pivot$Count)%>%
+  dplyr::rename("countMen" = "...4")%>%
+  mutate(victimRatio = countMen / Count)%>%
+  cbind(women_pivot$popRatio)%>%
+  dplyr::rename("popRatio" = "...6")%>%
+  mutate(totalShootings = countMen + Count)%>%
+  select(Borough, victimRatio, popRatio, totalShootings)
+
+ggplot(victim_women_pivot, aes(x = Borough, y = totalShootings, fill = popRatio/victimRatio)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Borough", y = "Total Number of Shootings", fill = "Population Ratio/Victim Ratio")
+  
+  
+  
+  
 
 
 
