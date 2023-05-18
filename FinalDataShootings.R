@@ -223,11 +223,13 @@ victim_women_pivot <- finalShootingData %>%
   mutate(totalShootings = countMen + Count)%>%
   select(Borough, victimRatio, popRatio, totalShootings)
 
+write.csv(victim_women_pivot, "sex_ratio_and_shootings.csv", row.names = FALSE)
+
 ggplot(victim_women_pivot, aes(x = Borough, y = totalShootings, fill = popRatio/victimRatio)) +
   geom_bar(stat = "identity") +
   labs(x = "Borough", y = "Total Number of Shootings", fill = "Population Ratio/Victim Ratio")
   
-  
+
   
   
 
