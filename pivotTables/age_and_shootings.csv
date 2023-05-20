@@ -1,0 +1,26 @@
+"Borough","VIC_AGE_GROUP","Count"
+"Bronx","<18",667
+"Bronx","18-24",2352
+"Bronx","25-44",2774
+"Bronx","45-64",384
+"Bronx","65+",30
+"Brooklyn","<18",851
+"Brooklyn","18-24",3215
+"Brooklyn","25-44",4030
+"Brooklyn","45-64",601
+"Brooklyn","65+",54
+"Manhattan","<18",284
+"Manhattan","18-24",939
+"Manhattan","25-44",1200
+"Manhattan","45-64",182
+"Manhattan","65+",19
+"Queens","<18",232
+"Queens","18-24",1175
+"Queens","25-44",1527
+"Queens","45-64",204
+"Queens","65+",22
+"Staten Island","<18",57
+"Staten Island","18-24",233
+"Staten Island","25-44",273
+"Staten Island","45-64",50
+"Staten Island","65+",5
