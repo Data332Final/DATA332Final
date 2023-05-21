@@ -26,6 +26,7 @@ shooting_rate <- read.csv("shooting_rate.csv")
 shootings_by_race <- read.csv("shootings_by_race.csv")
 victim_race_pivot <- read.csv("victim_race_pivot.csv")
 victim_black_pivot <- read.csv("victim_black_pivot.csv")
+final_shooting_data <- read.csv("final_shooting_data.csv")
 
 #setting up ui
 ui<-fluidPage( 
@@ -246,6 +247,17 @@ ui<-fluidPage(
                plotOutput('plot_12', height = "625px"),
                column(4,tableOutput("victim_black_pivot"))
     ),
+    
+    # Fourteenth tab content
+    tabPanel("Income by Public Transit Usage Prediction Model",
+             h1("Income by Public Transit Usage Prediction Model"),
+             p("Each point in this plot represents one of the 21,400 total shooting incidents. The model's prediction line shows the
+               relationship between income and and fifteen other selected variables from the final_shooting_data csv file. In the context of this visualization, we can see
+               that, on average, households in census tracts where more people are likely to use public transit have lower income than in
+               census tracts with lower public transit usage. This provides us with greater insight regarding the socieconomic factors that
+               affect the number of shooting incidents in an area."),
+             plotOutput('pred_model', height = "625px"),
+    ),
 
   )
 )
@@ -411,6 +423,19 @@ server<-function(input,output){
                        labels = c("Percentage of Shootings Involving Black Population", "Percentage of Black Population")) +
     scale_size_manual(values = c(5), 
                       labels = c("Percentage of Shootings Involving Black Population", "Percentage of Black Population"))
+  
+  # creating and plotting linear regression model
+  output$pred_model <- renderPlot({
+    lm_model <- lm(Income ~ ., data = final_shooting_data)
+  
+    final_shooting_data <- final_shooting_data %>%
+      add_predictions(lm_model)
+    final_shooting_data %>%
+      ggplot(aes(Transit, pred, group = 1)) +
+      geom_point(color = "steelblue") +
+      geom_smooth(se = FALSE) +
+      labs(title = "Income by Public Transit Usage Prediction Model", x = "% of People Commuting on Public Transit", y = "Income")
+  })
   
     
   # displaying chart visualizations

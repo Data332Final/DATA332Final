@@ -335,5 +335,18 @@ shootings_by_race <- finalShootingData %>%
 # saving pivot table
 write.csv(shootings_by_race, "shootings_by_race.csv", row.names = FALSE)
   
+# converting categorical variables to factors
+finalShootingData$VIC_AGE_GROUP <- as.factor(finalShootingData$VIC_AGE_GROUP)
+finalShootingData$VIC_RACE <- as.factor(finalShootingData$VIC_RACE)
+finalShootingData$VIC_SEX <- as.factor(finalShootingData$VIC_SEX)
+finalShootingData$Borough <- as.factor(finalShootingData$Borough)
 
+# selecting columns to compare against income in prediction model
+final_shooting_data <- finalShootingData %>%
+  select(VIC_AGE_GROUP, VIC_RACE, VIC_SEX, Borough, TotalPop, 
+         Men, Women, Hispanic, White, Black, Native, Asian, Income, Poverty,
+         Transit, Unemployment)
+
+# saving pivot table
+write.csv(final_shooting_data, "final_shooting_data.csv", row.names = FALSE)
 
