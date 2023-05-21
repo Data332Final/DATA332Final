@@ -33,10 +33,43 @@ ui<-fluidPage(
   titlePanel(title = "NYPD Shooting Incident and Borough Census Data"),
   h4("Socioeconomic and Statistical Analysis of Shooting Incidents in the NY Boroughs"),
   
-  # Create a tabset panel with eight tabs
+  # Create a tabset panel to organize charts in different pages
   tabsetPanel(
     
     # First tab content
+    tabPanel("Project Overview",
+             h1("Research Focus and Objectives, Requirements, Scope, and Idea Backlog"),
+             p(
+               HTML("Focus and Objectives:<br>
+                    This study seeks to explore and analyze the demographic and socioeconomic factors that contribute to the number of 
+                    shootings within each of the five NY boroughs. As a means to accomplish this end, we generated twelve charts and two prediction models to 
+                    examine these relationships proposed above. Another objective of our research is examining how the demographic breakdowns or ratios of 
+                    shooting victims for variables such as sex or race of the victim compare to the demographic breakdowns of those variables within the boroughs 
+                    where they occurred to see if they are proportional. The datasets for this research were chosen as a result of their volume, with the merged 
+                    dataset containing over fifty unique variables and 21,400 observations. Another factor was the cleanliness of the data; little to no cleaning 
+                    had to be done beyond eliminating columns we deemed unnecessary/information poor. For the more practical purposes of why we chose this research 
+                    topic, gaining a deeper understanding of the contributing factors of shooting incidents can help provide the insights and information necessary 
+                    to implement response plans and programs to minimize the prevalence of the primary causes of the shootings.While we do not have the jurisdiction 
+                    required to do such a thing, we felt this topic of study was a worthwhile research endeavor for these reasons.")
+             ),
+             p(
+               HTML("Requirements:<br>
+          - Explore and analyze the demographic and socioeconomic factors that contribute to the number of shootings within each of the five NY boroughs.<br>
+          - Explore the proportion between demographic breakdowns of shooting victims and the demographic makeup of the boroughs’ census data.<br>
+          - Generate a model that predicts the number of shooting incidents based on key independent variables.<br>
+          - Conduct data exploration and visualization for all relationships deemed potentially insightful.")
+             ),
+             p("Scope:"),
+             p(
+               HTML("Idea Backlog:<br>
+          - Create custom icon markers within the geospatial map to indicate the number of shootings, e.g., locations with 10-20 shootings is one color, 20-30 shootings is a different color, etc.<br>
+          - Overlay borough boundary lines onto the geospatial map.<br>
+          - Complete borough race breakdown vs shooting race breakdown for all five races present in the data like we did for black shooting victims.<br>
+          - Analyze the percentage of people that work professional versus construction jobs in each borough and its potential impact on the number of shootings.")
+             )
+    ),
+    
+    # Second tab content
     tabPanel("Shootings by Borough and Age of Victim",
              h1("Shootings by Borough and Age of Victim"),
              p("This chart reveals which NY boroughs and age groups comprised the greatest portions of the
@@ -52,7 +85,7 @@ ui<-fluidPage(
              )
     ),
 
-    # Second tab content
+    # Third tab content
     tabPanel("Shootings by Public Transit Usage and Borough",
              h1("Shootings by Public Transit Usage and Borough"),
              p("With the exception of Manhattan, there is a fairly strong correlation between the number of
@@ -70,7 +103,7 @@ ui<-fluidPage(
              )
     ),
     
-    # Third tab content
+    # Fourth tab content
     tabPanel("Shootings by Year and Borough",
              h1("Shootings by Year and Borough"),
              p("While there are inconsistencies among the boroughs, three general trends that can be identified are
@@ -88,7 +121,7 @@ ui<-fluidPage(
              )
     ),
     
-    # Fourth tab content
+    # Fifth tab content
     tabPanel("Shootings by Month and Borough",
              h1("Shootings by Month and Borough"),
              p("Disregarding minor inconcistencies, common trends that can be seen here are increases in the number of
@@ -104,7 +137,7 @@ ui<-fluidPage(
              )
     ),
 
-    # Fifth tab content
+    # Sixth tab content
     tabPanel("Geospatial Shooting Incident Map",
              h1("Locations of Shooting Hotspots"),
              p("This map shows that shooting hotspots are most higly concentrated in upper Manhattan, the south side of
@@ -118,7 +151,7 @@ ui<-fluidPage(
              )
     ),
 
-    # Sixth tab content
+    # Seventh tab content
     tabPanel("Shootings by Poverty and Borough",
              h1("Shootings by Poverty and Borough"),
              p("With inconsistent increases in shootings by borough relative to their average poverty rate, it appears
@@ -133,7 +166,7 @@ ui<-fluidPage(
              )
     ),
 
-    # Seventh tab content
+    # Eighth tab content
     tabPanel("Shootings by Income, Unemployment Rates, and Borough",
              h1("Shootings by Income, Unemployment Rates, and Borough"),
              p("With the exception of the Bronx (or Brooklyn, pending on how you look at it), there is a fairly weak correlation
@@ -149,7 +182,7 @@ ui<-fluidPage(
              )
     ),
 
-    # Eighth tab content
+    # Ninth tab content
     tabPanel("Shootings by Male-to-Female Shooting Incident Ratio and Borough",
              h1("Shootings by Male-to-Female Shooting Incident Ratio and Borough"),
              p("The population ratio expresses the average male-to-female ratio in regards to population, and victimRatio
@@ -164,7 +197,7 @@ ui<-fluidPage(
              )
     ),
 
-    # Ninth tab content
+    # Tenth tab content
     tabPanel("Annual Shooting Rate Per 1000 People by Borough",
              h1("Annual Shooting Rate Per 1000 People by Borough"),
              p("The total number of years included within the NYPD Shooting dataset is seventeen; thus, the shooting rate per 1000
@@ -177,7 +210,7 @@ ui<-fluidPage(
              column(4, tableOutput("shooting_rate_pivot"))
     ),
 
-    # Tenth tab content
+    # Eleventh tab content
     tabPanel("Shootings by Race of Victim and Borough",
              h1("Shootings by Race of Victim and Borough"),
              p("The vast majority of the shooting incidents that occurred, regardless of which borough, involved black individuals.
@@ -191,7 +224,7 @@ ui<-fluidPage(
              )
     ),
 
-    # Eleventh tab content
+    # Twelfth tab content
     tabPanel("Percentage of Shooting Incident Victims by Race and Borough",
              h1("Percentage of Shooting Incident Victims by Race and Borough"),
              p("The sole objective of this chart is to capture the differences in race proportions of the shooting victims. Victims with
@@ -202,7 +235,7 @@ ui<-fluidPage(
              column(4, tableOutput("victim_race_pivot"))
     ),
     
-    # Twelfth tab content
+    # Thirteenth tab content
     tabPanel("Percentage of Black Population Versus Percentage of Black Shooting Victims",
              h1("Percentage of Black Population Versus Percentage of Black Shooting Victims"),
              p("While the black population accounts for a large portion of the total population within the five boroughs, there is a clear
