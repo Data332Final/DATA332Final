@@ -10,7 +10,7 @@ library(modelr)
 
 rm(list = ls())
 
-setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/pivotTables")
+#setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/pivotTables")
 
 # reading in pivot tables
 age_and_shootings <- read.csv("age_and_shootings.csv")

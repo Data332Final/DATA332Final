@@ -19,7 +19,7 @@ library(tidyverse)
 rm(list=ls())
 
 #setwd("~/git_data/332/DATA332Final/Data")
-setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/Data")
+#setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/Data")
 
 options(scipen = 999)
 column_classes <- c("numeric", "numeric", "numeric", "character", "character")
