@@ -107,10 +107,6 @@ shooting_coordinates <- finalShootingData %>%
 # saving pivot table
 write.csv(shooting_coordinates, "shooting_coordinates.csv", row.names = FALSE)
 
-leaflet(shooting_coordinates) %>%
-  addTiles() %>%
-  addAwesomeMarkers(data = shooting_coordinates, lng = ~longitude, lat = ~latitude, label = ~Shootings, icon = awesomeIcons(icon = "star", markerColor = "darkblue")) 
-
 # calculating total population of each census tract in the boroughs to use in shooting_rate pivot
 borough_pop <- finalShootingData %>%
   group_by(Borough, TotalPop) %>%
