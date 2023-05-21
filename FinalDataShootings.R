@@ -4,17 +4,17 @@ library(tidyr)
 library(rpart)
 library(rpart.plot)
 library(modelr)
-library(tidyverse)
 library(ggplot2)
 library(shiny)
 library(DT)
 library(rsconnect)
-library(tidyverse)
 library(readr)
 library(data.table)
 library(leaflet)
 library(leaflet.extras)
-
+library(clipr)
+library(stringr)
+library(tidyverse)
 
 rm(list=ls())
 
@@ -61,6 +61,11 @@ finalShootingData <- finalData %>%
          Men, Women, Hispanic, White, Black, Native, Asian, Income, Poverty, Professional, Construction,
          Transit, Unemployment)
 
+# creating object for inquiring ChatGPT about prediction models
+output_text <- capture.output(print(finalShootingData))
+# copying lines of code to clipboard
+write_clip(output_text)
+
 #setting up data frame to generate columns for time series analysis visualizations  
 shooting_date <- setDT(finalShootingData) %>%
   #reformatting Date.sent column to enable splitting  
@@ -81,12 +86,6 @@ year_of_shooting <- shooting_date %>%
 # saving pivot table
 write.csv(year_of_shooting, "year_of_shooting.csv", row.names = FALSE)
 
-ggplot(year_of_shooting, aes(x = year, y = count, group = Borough)) +
-  geom_line(aes(colour = Borough), lwd=1.0) + 
-  xlab("Year") + 
-  ylab("# of Shooting Incidents") + 
-  ggtitle("# of Shooting Incidents Each Year by Borough")
-
 # making a pivot table by month for time series analysis
 month_of_shooting <- shooting_date %>%
   group_by(Borough, month) %>%
@@ -94,12 +93,6 @@ month_of_shooting <- shooting_date %>%
 
 # saving pivot table
 write.csv(month_of_shooting, "month_of_shooting.csv", row.names = FALSE)
-
-ggplot(month_of_shooting, aes(x = month, y = count, group = Borough)) +
-  geom_line(aes(colour = Borough), lwd=1.0) + 
-  xlab("Month") + 
-  ylab("# of Shooting Incidents") + 
-  ggtitle("Cumulative # of Shooting Incidents Each Month by Borough") 
 
 # extracting lat and lon values
 finalShootingData$longitude <- as.numeric(str_extract(finalShootingData$Lon_Lat, "-?\\d+\\.\\d+"))
@@ -138,13 +131,6 @@ shooting_rate <- finalShootingData %>%
 # saving pivot table
 write.csv(shooting_rate, "shooting_rate.csv", row.names = FALSE)
 
-ggplot(shooting_rate, aes(x = reorder(Borough, -Shooting_rate), y = Shooting_rate, fill = as.factor(Borough))) +
-  geom_col(show.legend = FALSE) +
-  labs(x = "Borough", y = "Annual # of Shootings Per 1000 People") +
-  ggtitle("Annual # of Shooting Incidents Per 1000 People by Borough") +
-  geom_text(aes(label = Shooting_rate, vjust = 1.5)) +
-  theme_minimal()
-
 # making a pivot table to explore poverty's effects on the number of shootings
 poverty_and_shootings <- finalShootingData %>%
   group_by(Borough, Poverty) %>%
@@ -157,13 +143,6 @@ poverty_and_shootings <- finalShootingData %>%
 
 # saving pivot table
 write.csv(poverty_and_shootings, "poverty_and_shootings.csv", row.names = FALSE)
-
-ggplot(poverty_and_shootings, aes(x = reorder(Borough, Total_shootings), y = Total_shootings, fill = Avg_poverty)) +
-  geom_col() +
-  labs(x = "Borough", y = "# of Shooting Incidents", fill = "Average Poverty %") +
-  scale_fill_gradient(low="cyan", high="black") +
-  ggtitle("Effect of Poverty on Number of Shootings in Each Borough") +
-  theme_minimal()
 
 # created in order to bind to income_and_shootings
 unemployment_and_shootings <- finalShootingData %>%
@@ -191,13 +170,6 @@ income_and_shootings <- finalShootingData %>%
 
 # saving pivot table
 write.csv(income_and_shootings, "income_and_shootings.csv", row.names = FALSE)
-
-ggplot(income_and_shootings, aes(x = reorder(Borough, -Avg_unemployment), y = Total_shootings, size = Avg_unemployment, color = Avg_income)) +
-  geom_point() +
-  geom_text(aes(label = paste0("$",Avg_income), vjust = 1.5)) + 
-  scale_size(range = c(5,10)) +
-  scale_color_gradient(low="#FFC330", high="steelblue") +
-  labs(x = "Borough", y = "# of Shooting Incidents", size = "Average Unemployment", color = "Average Income")
 
 # calculating the average number of men per census tract by borough for use in calculating popRatio in women_pivot
 men_pivot <- finalShootingData %>%
@@ -242,11 +214,6 @@ victim_women_pivot <- finalShootingData %>%
 # saving pivot table
 write.csv(victim_women_pivot, "sex_ratio_and_shootings.csv", row.names = FALSE)
 
-ggplot(victim_women_pivot, aes(x = reorder(Borough, -victimRatio/popRatio), y = totalShootings, fill = victimRatio/popRatio)) +
-  geom_bar(stat = "identity") +
-  scale_fill_gradient(low="white", high="darkblue") +
-  labs(x = "Borough", y = "Total Number of Shootings", fill = "Victim Ratio Versus Population Ratio")
-
 # creating pivot for binding total shootings column to other race pivots  
 population_race_pivot <- finalShootingData%>%
   group_by(Borough)%>%
@@ -272,18 +239,8 @@ victim_black_pivot <- finalShootingData %>%
   cbind(average_black_percent$averageBlack)%>%
   dplyr::rename("populationAverageBlack" = "...6")
 
-ggplot(victim_black_pivot, aes(x = Borough)) +
-  geom_point(aes(y = blackPercent/100, color = "Percentage of Shootings Involving Black Population"), size = 5) +
-  geom_segment(aes(x = Borough, xend = Borough, y = 0, yend = populationAverageBlack/100), color = "blue") +
-  geom_point(aes(x = Borough, y = populationAverageBlack/100, color = "Percentage of Black Population"), size = 5) +
-  geom_text(aes(y = blackPercent/100, label = round(blackPercent/100, 2)), vjust = 1.75, color = "black") +
-  geom_text(aes(y = populationAverageBlack/100, label = round(populationAverageBlack/100, 2)), vjust = -1, color = "black") +
-  labs(y = "% of Black Population", color = "Color Meaning") +
-  ggtitle("Black Shooting Ratio Versus Black Population Ratio by Borough") +
-  scale_color_manual(values = c("Percentage of Shootings Involving Black Population" = "red", "Percentage of Black Population" = "blue"), 
-                     labels = c("Percentage of Shootings Involving Black Population", "Percentage of Black Population")) +
-  scale_size_manual(values = c(5), 
-                    labels = c("Percentage of Shootings Involving Black Population", "Percentage of Black Population"))
+# saving pivot table
+write.csv(victim_black_pivot, "victim_black_pivot.csv", row.names = FALSE)
 
 # added rows for boroughs where shooting incidents did not occur for purposes of binding later
 victim_native_extra_data <- data.frame(Borough = c("Manhattan", "Staten Island"),
@@ -350,15 +307,6 @@ victim_race_pivot <- finalShootingData %>%
 # saving pivot table
 write.csv(victim_race_pivot, "victim_race_pivot.csv", row.names = FALSE)
 
-ggplot(victim_race_pivot, aes(x = Borough)) +
-  geom_point(aes(y = blackPercent/100, color = "Percentage of Shootings Involving Black Population"), size = 5) +
-  geom_point(aes(y = asianPercent/100, color = "Percentage of Shootings Involving Asian Population"), size = 5) +
-  geom_point(aes(y = whitePercent/100, color = "Percentage of Shootings Involving White Population"), size = 5) +
-  geom_point(aes(y = hispanicPercent/100, color = "Percentage of Shootings Involving Hispanic Population"), size = 5) +
-  geom_point(aes(y = nativePercent/100, color = "Percentage of Shootings Involving Native Population"), size = 5) +
-  labs(y = "% of Shooting Incident Victims by Race", color = "Color Meaning") +
-  ggtitle("Demographic Breakdown of Shootings by Borough")
-
 # making a pivot table to explore the effects of commuting with public transit on the number of shootings
 public_transit_and_shootings <- finalShootingData %>%
   group_by(Borough, Transit) %>%
@@ -372,15 +320,6 @@ public_transit_and_shootings <- finalShootingData %>%
 # saving pivot table
 write.csv(public_transit_and_shootings, "public_transit_and_shootings.csv", row.names = FALSE)
 
-ggplot(public_transit_and_shootings, aes(x = Borough, y = Total_shootings)) +
-  geom_segment(aes(x = reorder(Borough, -Avg_transit), xend = reorder(Borough, -Avg_transit), y = 0, yend = Total_shootings, color = Avg_transit), lwd = 2.5) +
-  geom_point(aes(color = Avg_transit), size = 10) +
-  scale_color_gradient(low = "#FFC300", high = "#C70039") +
-  labs(title = "Effect of Public Transit Usage on Number of Shootings in Each Borough",
-       x = "Borough",
-       y = "# of Shooting Incidents",
-       color = "% of Population Commuting on Public Transit")
-
 # making pivot table for shootings by age group for each borough
 age_and_shootings <- finalShootingData %>%
   group_by(Borough, VIC_AGE_GROUP) %>%
@@ -390,13 +329,6 @@ age_and_shootings <- finalShootingData %>%
 
 # saving pivot table
 write.csv(age_and_shootings, "age_and_shootings.csv", row.names = FALSE)
-
-ggplot(age_and_shootings, aes(x=Borough, y=VIC_AGE_GROUP, fill=Count)) +
-  geom_tile() +
-  scale_fill_gradient(low="lightblue", high="black") +
-  labs(title = "Heatmap of Shootings by Borough and Age of Victim", x = "Borough", y = "Age of Victim", y = "# of Shooting Incidents") +
-  theme_minimal() +
-  geom_text(aes(label = Count), color = "white")
   
 # shooting incidents for each VIC_RACE category within each Borough
 shootings_by_race <- finalShootingData %>%
@@ -406,14 +338,6 @@ shootings_by_race <- finalShootingData %>%
 
 # saving pivot table
 write.csv(shootings_by_race, "shootings_by_race.csv", row.names = FALSE)
-
-ggplot(shootings_by_race, aes(x = Borough, y = count, fill = VIC_RACE)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Borough", y = "# of Shooting Incidents", fill = "VIC_RACE") +
-  ggtitle("Shooting Incidents by Borough and VIC_RACE") +
-  theme_minimal()
   
 
-  
-  
-  
+
