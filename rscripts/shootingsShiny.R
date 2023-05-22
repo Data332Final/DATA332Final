@@ -10,7 +10,7 @@ library(modelr)
 
 rm(list = ls())
 
-#setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/pivotTables")
+setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/pivotTables")
 
 # reading in pivot tables
 age_and_shootings <- read.csv("age_and_shootings.csv")
@@ -57,7 +57,7 @@ ui<-fluidPage(
                HTML("Requirements:<br>
           - Explore and analyze the demographic and socioeconomic factors that contribute to the number of shootings within each of the five NY boroughs.<br>
           - Explore the proportion between demographic breakdowns of shooting victims and the demographic makeup of the boroughs’ census data.<br>
-          - Generate a model that predicts the number of shooting incidents based on key independent variables.<br>
+          - Generate a model that predicts the number of shooting incidents or based on key independent variables.<br>
           - Conduct data exploration and visualization for all relationships deemed potentially insightful.")
              ),
              p("Scope:"),
@@ -258,7 +258,50 @@ ui<-fluidPage(
                affect the number of shooting incidents in an area."),
              plotOutput('pred_model', height = "625px"),
     ),
-
+    
+    # Fifteenth tab content
+    tabPanel("Prediction Model Rationale",
+             h1("Prediction Model Rationale"),
+             p(
+               HTML("Implementing the model:<br>
+                    One of the models ChatGPT suggested would be the best for creating prediction models with our data would be a linear regression model.
+                    We tried implementing this and other predictive model types, e.g., decision tree, random forest, support vector machine modeling, etc.,
+                    but we could not get any of them to work due to consistent inabilities to load or install the necessary packages. We did, however, produce
+                    a predictive linear regression model ourselves, and we inquired ChatGPT about its rationale for suggesting this type of predictive model.")
+             ),
+             p(
+               HTML('Linear regression model rationale inquiry:<br>
+                    When I asked ChatGPT if there "are research studies or journal articles on similar topics that used a predictive linear regression model",
+                    the LLM gave me the following scholarly journal article: "Predictive Modeling of Crime Data: A Study of Seattle".')
+             ),
+             p(
+               HTML('Research article summary:<br>
+                    I asked ChatGPT to provide a five-sentence summary of the article, and this is what it returned: ""Predictive Modeling of Crime Data: A 
+                    Study of Seattle" explores the application of predictive modeling techniques in analyzing crime data specifically in the context of Seattle. 
+                    The authors aim to develop a predictive model that can forecast future crime occurrences based on historical crime data. They employ linear 
+                    regression as the predictive modeling technique and utilize various features such as location, time of day, and type of crime to build the model. 
+                    The study demonstrates the potential of predictive modeling in crime analysis and highlights the importance of accurate data collection and feature 
+                    selection for effective predictions. The findings of the study contribute to the understanding of crime patterns and provide insights for law 
+                    enforcement agencies in implementing proactive strategies to prevent crime."') 
+             ),
+             p(
+               HTML("Research correlation:<br>
+                    There is strong correlation between the research article described above and ours because both are seeking to explain what variables and factors
+                    contribute to the number of crimes that occur within a specific area. Our data analyis is much more descriptive in nature than the article proposed,
+                    but there is definitely overlap in terms of the substance of/information present within the daat, so it is logical to use the same type of prediction model.")
+             ),
+             p(
+               HTML('Article citation:<br>
+                    When I inquired about how I would cite research article, ChatGPT returned the following: 
+                    ')
+             ),
+             p(
+               HTML("ChatGPT Citation:<br>
+                    The citation for all the inquiries made to ChatGPT for these purposes is displayed in the following:
+                    OpenAI. (2023). ChatGPT, Windows. Retrieved May 21, 2023, from https://www.openai.com")
+             ),
+     
+           )
   )
 )
 

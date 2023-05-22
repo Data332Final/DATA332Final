@@ -19,7 +19,7 @@ library(tidyverse)
 rm(list=ls())
 
 #setwd("~/git_data/332/DATA332Final/Data")
-#setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/Data")
+setwd("C:/Users/lukec/OneDrive/Documents/data332/DATA332Final/Data")
 
 options(scipen = 999)
 column_classes <- c("numeric", "numeric", "numeric", "character", "character")
@@ -61,8 +61,13 @@ finalShootingData <- finalData %>%
          Men, Women, Hispanic, White, Black, Native, Asian, Income, Poverty, Professional, Construction,
          Transit, Unemployment)
 
+# creating a dataframe for inquiring ChatGPT about prediction models
+llm_snapshot <- finalShootingData %>%
+  sample_n(10)
+
 # creating object for inquiring ChatGPT about prediction models
-output_text <- capture.output(print(finalShootingData))
+output_text <- capture.output(print(llm_snapshot))
+
 # copying lines of code to clipboard
 write_clip(output_text)
 
