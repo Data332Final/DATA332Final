@@ -280,6 +280,6 @@ output$pred_model <- renderPlot({
 
 ---
 ## Shinyapp Link :link:
-- add shinyapp link here
+- (https://leandrag20.shinyapps.io/NewYork_Shootings/)
     
     
