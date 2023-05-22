@@ -1,0 +1,14 @@
+name: NewYork_Shootings
+title: NewYork_Shootings
+username:
+account: leandrag20
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9157720
+bundleId: 7246166
+url: https://leandrag20.shinyapps.io/NewYork_Shootings/
+when: 1684726045.51032
+lastSyncTime: 1684726045.51033
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: FinalDataShootings.R
