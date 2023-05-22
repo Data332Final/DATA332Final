@@ -143,9 +143,22 @@ victim_black_pivot <- finalShootingData %>%
 
 - This was done for the seven remaining pivot tables that were used for charting purposes.
 
-7. We saved the twelve pivot tables required for charting to csv files for use in the shiny script
+7. We saved thirteen pivot tables required for charting to csv files for use in the shiny script
 ```
 write.csv(year_of_shooting, "year_of_shooting.csv", row.names = FALSE)
+```
+
+8. We converted categorical variables to factors and selected sixteen columns for use in the linear regression model that we made (without using an LLM).
+```
+finalShootingData$VIC_AGE_GROUP <- as.factor(finalShootingData$VIC_AGE_GROUP)
+finalShootingData$VIC_RACE <- as.factor(finalShootingData$VIC_RACE)
+finalShootingData$VIC_SEX <- as.factor(finalShootingData$VIC_SEX)
+finalShootingData$Borough <- as.factor(finalShootingData$Borough)
+
+final_shooting_data <- finalShootingData %>%
+  select(VIC_AGE_GROUP, VIC_RACE, VIC_SEX, Borough, TotalPop, 
+         Men, Women, Hispanic, White, Black, Native, Asian, Income, Poverty,
+         Transit, Unemployment)
 ```
 ---
 ## Data Analysis :mag:
@@ -250,7 +263,20 @@ shooting_coordinates_map <-
     addAwesomeMarkers(data = shooting_coordinates, lng = ~longitude, lat = ~latitude, label = ~Shootings, icon = awesomeIcons(icon = "star", markerColor = "darkblue")) 
 ```
 
-9. Prediction modelllllllllllllllllllllllllllll (May want to make this its own section in readme).
+9. We created a linear regression model that displayed the relationship between public transit usage and income for all 21,400 observations.
+```
+output$pred_model <- renderPlot({
+    lm_model <- lm(Income ~ ., data = final_shooting_data)
+  
+    final_shooting_data <- final_shooting_data %>%
+      add_predictions(lm_model)
+    final_shooting_data %>%
+      ggplot(aes(Transit, pred, group = 1)) +
+      geom_point(color = "steelblue") +
+      geom_smooth(se = FALSE) +
+      labs(title = "Income by Public Transit Usage Prediction Model", x = "% of People Commuting on Public Transit", y = "Income")
+  })
+```
 
 ---
 ## Shinyapp Link :link:
