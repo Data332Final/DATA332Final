@@ -57,10 +57,14 @@ ui<-fluidPage(
                HTML("Requirements:<br>
           - Explore and analyze the demographic and socioeconomic factors that contribute to the number of shootings within each of the five NY boroughs.<br>
           - Explore the proportion between demographic breakdowns of shooting victims and the demographic makeup of the boroughs’ census data.<br>
-          - Generate a model that predicts the number of shooting incidents based on key independent variables.<br>
-          - Conduct data exploration and visualization for all relationships deemed potentially insightful.")
+          - Generate a model that predicts the number of shooting incidents based on key independent variables.")
              ),
-             p("Scope:"),
+             p(
+             HTML("Scope: <br>
+          - Conduct data exploration and visualization for all relationships deemed potentially insightful. <br>
+          - Explore and find out which factors together give us the most insightful models. <br>
+          - Display all models into an interactive shiny app to give users an easy way to view the found information.")
+             ),
              p(
                HTML("Idea Backlog:<br>
           - Create custom icon markers within the geospatial map to indicate the number of shootings, e.g., locations with 10-20 shootings is one color, 20-30 shootings is a different color, etc.<br>
