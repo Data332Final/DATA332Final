@@ -277,7 +277,7 @@ ui<-fluidPage(
                HTML('Linear regression model rationale inquiry:<br>
                     When I asked ChatGPT if there "are research studies or journal articles on similar topics that used a predictive linear regression model",
                     the LLM gave me the following scholarly journal article: "Delving into Factors Influencing New
-                    York Crime Data with the Tools of Machine Learning".')
+                    York Crime Data with the Tools of Machine Learning∗".')
              ),
              p(
                HTML('Research article summary:<br>
@@ -291,8 +291,9 @@ ui<-fluidPage(
              ),
              p(
                HTML("Research correlation:<br>
-                    There is strong correlation between the research article described above and ours because both pertain to identifying the relationships that affect 
-                    crimes occuring within the five NY boroughs, so it is logical to use the same type of prediction model, that being a (mutlivariate) linear regression.")
+                    There is strong correlation between the research article described above and ours because both are seeking to explain what variables and factors
+                    contribute to the number of crimes that occur within a specific area. Our data analyis is much more descriptive in nature than the article proposed,
+                    but there is definitely overlap in terms of the substance of/information present within the daat, so it is logical to use the same type of prediction model.")
              ),
              p(
                HTML('Article citation:<br>
