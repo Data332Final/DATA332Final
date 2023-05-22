@@ -57,10 +57,14 @@ ui<-fluidPage(
                HTML("Requirements:<br>
           - Explore and analyze the demographic and socioeconomic factors that contribute to the number of shootings within each of the five NY boroughs.<br>
           - Explore the proportion between demographic breakdowns of shooting victims and the demographic makeup of the boroughs’ census data.<br>
-          - Generate a model that predicts the number of shooting incidents or based on key independent variables.<br>
-          - Conduct data exploration and visualization for all relationships deemed potentially insightful.")
+          - Generate a model that predicts the number of shooting incidents or based on key independent variables.")
              ),
-             p("Scope:"),
+             p(
+               HTML("Scope: <br>
+          - Conduct data exploration and visualization for all relationships deemed potentially insightful. <br>
+          - Explore and find out which factors together give us the most insightful models. <br>
+          - Display all models into an interactive shiny app to give users an easy way to view the found information.")
+               ),
              p(
                HTML("Idea Backlog:<br>
           - Create custom icon markers within the geospatial map to indicate the number of shootings, e.g., locations with 10-20 shootings is one color, 20-30 shootings is a different color, etc.<br>
@@ -272,17 +276,18 @@ ui<-fluidPage(
              p(
                HTML('Linear regression model rationale inquiry:<br>
                     When I asked ChatGPT if there "are research studies or journal articles on similar topics that used a predictive linear regression model",
-                    the LLM gave me the following scholarly journal article: "Predictive Modeling of Crime Data: A Study of Seattle".')
+                    the LLM gave me the following scholarly journal article: "Delving into Factors Influencing New
+                    York Crime Data with the Tools of Machine Learning∗".')
              ),
              p(
                HTML('Research article summary:<br>
-                    I asked ChatGPT to provide a five-sentence summary of the article, and this is what it returned: ""Predictive Modeling of Crime Data: A 
-                    Study of Seattle" explores the application of predictive modeling techniques in analyzing crime data specifically in the context of Seattle. 
-                    The authors aim to develop a predictive model that can forecast future crime occurrences based on historical crime data. They employ linear 
-                    regression as the predictive modeling technique and utilize various features such as location, time of day, and type of crime to build the model. 
-                    The study demonstrates the potential of predictive modeling in crime analysis and highlights the importance of accurate data collection and feature 
-                    selection for effective predictions. The findings of the study contribute to the understanding of crime patterns and provide insights for law 
-                    enforcement agencies in implementing proactive strategies to prevent crime."') 
+                    I asked ChatGPT to provide a five-sentence summary of the article, and this is what it returned: "The study focuses on 
+                    using machine learning techniques to analyze crime data in New York Citys five boroughs: Brooklyn, Bronx, Manhattan, Queens, 
+                    and Staten Island for the year 2019. The goal is to predict crime hotspots and types of criminal offenses using supervised 
+                    classification models such as Decision Tree, Multivariate Linear Regression, and kNN. The results show that Multivariate Linear 
+                    Regression yielded the highest accuracy in predicting the borough where the crime occurred, while  Decision Tree performed well
+                    in predicting the type of crime. The study emphasizes the importance of utilizing data-driven tools for crime pattern detection to 
+                    enhance crime detection, prevention, and resource allocation for safer communities."') 
              ),
              p(
                HTML("Research correlation:<br>
@@ -293,6 +298,8 @@ ui<-fluidPage(
              p(
                HTML('Article citation:<br>
                     When I inquired about how I would cite research article, ChatGPT returned the following: 
+                    Pinto, M., Wei, H., Konate, K., & Touray, I. (2023). Delving into Factors Influencing 
+                    New York Crime Data with the Tools of Machine Learning. Journal of Criminal Analysis, 31(3), 234-251.
                     ')
              ),
              p(
